@@ -1,15 +1,15 @@
-
+import { Welcome } from './componenet';
 export default function App2() {
     return (
       <div >
         <div class= "name2">
         <div class='email'>
           <p >Email </p>
-        <input  class="textholder" type='text'  maxLength = "30" placeholder='abc@gmail.com'/>
+          <Welcome name="abc@gmail.com" />
         </div>
         <div class="number">
         <p >Phone Number</p>
-        <input class="textholder" type="number"  maxLength ="15" placeholder='+91'/>
+        <Welcome name="+91" />
       </div>
       </div>
       <div>
