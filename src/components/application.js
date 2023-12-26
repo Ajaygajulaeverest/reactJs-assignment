@@ -3,22 +3,16 @@
 import { useState } from "react";
 import AWS from "aws-sdk";
 
-
 const validFileTypes = ["image/jpg", "image/jpeg", "image/png"];
-// const URL = "/images";
+
 export default function Upload() {
   const [file, setFile] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
 
-  // Function to upload file to s3
   const uploadFile = async () => {
-    // S3 Bucket Name
     const S3_BUCKET = "simpleaj";
-
-    // S3 Region
     const REGION = "ap-south-1";
-
-    // S3 Credentials
     AWS.config.update({
       accessKeyId: "AKIAYZ4ROK5JSPTC4DGR",
       secretAccessKey: "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",
@@ -36,12 +30,9 @@ export default function Upload() {
       Body: file,
     };
 
-    // Uploading file to s3
-
     var upload = s3
       .putObject(params)
       .on("httpUploadProgress", (evt) => {
-        // File uploading progress
         console.log(
           "Uploading " + parseInt((evt.loaded * 100) / evt.total) + "%"
         );
@@ -50,23 +41,23 @@ export default function Upload() {
 
     await upload.then((err, data) => {
       console.log(err);
-      // Fille successfully uploaded
       alert("File uploaded successfully.");
     });
   };
-  // Function to handle file and store it to file state
   const handleFileChange = (e) => {
-    // Uploaded file
     const file = e.target.files[0];
     if (!validFileTypes.find((type) => type === file.type)) {
       setError("File must be in JPEG/PNG format");
+      setButtonDisabled(false);
       return;
     }
-    // Changing file state
+    
+    setButtonDisabled(true);
+    setError("")
     setFile(file);
   };
 
-  // 
+  //
 
   return (
     <div>
@@ -75,7 +66,9 @@ export default function Upload() {
           <h3>Please upload your profile picture</h3>
           <div>
             <input type="file" onChange={handleFileChange} />
-            <button onClick={uploadFile}>Upload!</button>
+            <button onClick={uploadFile} disabled={!isButtonDisabled}>
+              Upload!
+            </button>
 
             {/* <Text fontsize="lg" color="red.300">
               {error}{" "}
